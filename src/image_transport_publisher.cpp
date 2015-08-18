@@ -6,7 +6,8 @@
 #include <opencv2/highgui/highgui.hpp>
 using namespace cv;
 
-static const std::string TOPIC_NAME = "camera/image";
+static const std::string IMAGE_PATH = "/home/darrenl/lena.jpg";
+static const std::string TOPIC_NAME = "camera/rgb/image";
 
 int publishImage(std::string filepath)
 {
@@ -32,12 +33,14 @@ int publishImage(std::string filepath)
     }
 }
 
-
-int publishImageWithoutImage_transport(std::string filepath)
+int publishImageWithoutImage_transport()
 {
+    ROS_INFO("Topic : %s", TOPIC_NAME.c_str());
+    ROS_INFO("IMAGE PATH : %s", IMAGE_PATH.c_str());
     ros::NodeHandle nh;
+    std::string image_path = IMAGE_PATH;
     cv_bridge::CvImage cv_image;
-    cv_image.image = cv::imread(filepath, CV_LOAD_IMAGE_COLOR);
+    cv_image.image = cv::imread(image_path, CV_LOAD_IMAGE_COLOR);
     cv_image.encoding = "bgr8";
     sensor_msgs::Image ros_image;
     cv_image.toImageMsg(ros_image);
@@ -57,6 +60,6 @@ int publishImageWithoutImage_transport(std::string filepath)
 int main(int argc, char** argv)
 {
     ros::init(argc, argv, "image_transport_publisher");
-    publishImageWithoutImage_transport("/home/darrenl/lena.jpg");
+    publishImageWithoutImage_transport();
     return 0;
 }
